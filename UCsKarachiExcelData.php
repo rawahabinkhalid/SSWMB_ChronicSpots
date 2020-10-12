@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>UCS KARACHI | Dashboard</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <!-- IonIcons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link rel="stylesheet" href="https:////cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
+
+
+    <!-- firebase -->
+    <script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-storage.js"></script>
+
+    <style>
+    .form_button {
+        padding: 10px 30px;
+        border-radius: 10px;
+        border: none;
+        background-color: #9BBAE6;
+        color: #fff;
+        font-weight: bold;
+        font-size: 16.5px;
+        letter-spacing: 1.5px;
+    }
+
+    .form_button:hover {
+        padding: 10px 30px;
+        border-radius: 10px;
+        border: none;
+        background-color: #8CE88C;
+        color: #000;
+        font-weight: bold;
+        font-size: 16.5px;
+        letter-spacing: 1.5px;
+    }
+    </style>
+</head>
+<!--
+BODY TAG OPTIONS:
+=================
+Apply one or more of the following classes to to the body tag
+to get the desired effect
+|---------------------------------------------------------|
+|LAYOUT OPTIONS | sidebar-collapse                        |
+|               | sidebar-mini                            |
+|---------------------------------------------------------|
+-->
+
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <?php
+          include "header.php";
+        ?>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <?php
+          include "sidebar_menu.php";
+        ?>
+        <!-- /.sidebar -->
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0 text-dark"></h1>
+                        </div><!-- /.col -->
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active">UCS KARACHI</li>
+                            </ol>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <form enctype="multipart/form-data">
+                            <input id="upload" type=file name="files[]">
+                        </form>
+                        <textarea class="form-control" rows=35 cols=120 id="xlx_json"></textarea>
+                    </div>
+                    <br><br>
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+
+        <!-- Main Footer -->
+        <footer class="main-footer">
+            <strong>Copyright &copy; 2020 <a href="https://matz.group/" target="_blank">Matz Solutions Pvt
+                    Ltd</a>.</strong>
+            All rights reserved.
+            <div class="float-right d-none d-sm-inline-block">
+                <b>Version</b> 3.0.0-rc.1
+            </div>
+        </footer>
+    </div>
+    <!-- ./wrapper -->
+
+    <!-- REQUIRED SCRIPTS -->
+
+    <!-- jQuery -->
+    <script src="plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE -->
+    <script src="dist/js/adminlte.js"></script>
+
+    <!-- OPTIONAL SCRIPTS -->
+    <script src="plugins/chart.js/Chart.min.js"></script>
+    <script src="dist/js/demo.js"></script>
+    <script src="dist/js/pages/dashboard3.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
+    <script>
+    $('#header_heading').html("UCS KARACHI");
+    </script>
+
+    <!-- Firebase API -->
+    <script src="FireBase.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+    <script>
+    var ExcelToJSON = function() {
+
+        this.parseExcel = function(file) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                var data = e.target.result;
+                var workbook = XLSX.read(data, {
+                    type: 'binary'
+                });
+                workbook.SheetNames.forEach(function(sheetName) {
+                    // Here is your object
+                    var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[
+                        sheetName]);
+                    var json_object = JSON.stringify(XL_row_object);
+                    console.log(JSON.parse(json_object));
+                    // jQuery('#xlx_json').val(json_object);
+                })
+            };
+
+            reader.onerror = function(ex) {
+                console.log(ex);
+            };
+
+            reader.readAsBinaryString(file);
+        };
+    };
+
+    function handleFileSelect(evt) {
+
+        var files = evt.target.files; // FileList object
+        var xl2json = new ExcelToJSON();
+        xl2json.parseExcel(files[0]);
+    }
+    </script>
+    
+    <script>
+    document.getElementById('upload').addEventListener('change', handleFileSelect, false);
+    </script>
+
+
+</body>
+
+</html>
